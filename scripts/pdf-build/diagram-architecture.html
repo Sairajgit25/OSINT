@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --ink: #131515;
+    --muted: #747b7e;
+    --line: #4b86a4;
+    --border: #acbdc5;
+    --node-bg: #ffffff;
+    --tint: #e8eaeb;
+    --dark: #32454e;
+    --accent: #1f6c92;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    font-family: 'FreeSerif', 'DejaVu Serif', Georgia, serif;
+  }
+  .canvas {
+    width: 620px;
+    box-sizing: border-box;
+    padding: 18px 20px 22px 20px;
+    background: #ffffff;
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+  }
+  .node {
+    box-sizing: border-box;
+    width: 300px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--node-bg);
+    padding: 9px 14px 10px 14px;
+    text-align: center;
+  }
+  .node.wide { width: 340px; }
+  .node .t {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+  }
+  .node .s {
+    font-size: 10.5px;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.35;
+  }
+  .node.endpoint { background: var(--tint); }
+  .node.dark {
+    background: var(--dark);
+    border-color: var(--dark);
+  }
+  .node.dark .t { color: #ffffff; }
+  .node.dark .s { color: #c9d3d8; }
+  .node.worker {
+    width: 178px;
+    border-top: 3px solid var(--accent);
+    padding: 8px 8px 9px 8px;
+  }
+  .node.worker .t { font-size: 12.5px; }
+  .node.worker .s { font-size: 10px; }
+  .arrow {
+    width: 2px;
+    height: 16px;
+    background: var(--line);
+    margin: 0 auto;
+  }
+  .arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-top: 6px solid var(--line);
+    margin: 0 auto;
+  }
+  .v-gap { height: 4px; }
+  .fan-out {
+    position: relative;
+    height: 26px;
+    width: 570px;
+    margin: 0 auto;
+  }
+  .fan-out .rail {
+    position: absolute;
+    top: 0;
+    left: 96px;
+    right: 96px;
+    height: 2px;
+    background: var(--line);
+  }
+  .fan-out .stub {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 20px;
+    background: var(--line);
+  }
+  .fan-out .stub.c1 { left: 187px; }
+  .fan-out .stub.c2 { left: 284px; }
+  .fan-out .stub.c3 { left: 381px; }
+  .fan-out .head {
+    position: absolute;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-top: 6px solid var(--line);
+  }
+  .fan-out .head.c1 { left: 182.5px; }
+  .fan-out .head.c2 { left: 279.5px; }
+  .fan-out .head.c3 { left: 376.5px; }
+  .fan-out .root {
+    position: absolute;
+    top: -6px;
+    left: 284px;
+    width: 2px;
+    height: 8px;
+    background: var(--line);
+  }
+  .fan-in {
+    position: relative;
+    height: 26px;
+    width: 570px;
+    margin: 0 auto;
+  }
+  .fan-in .rail {
+    position: absolute;
+    top: 24px;
+    left: 96px;
+    right: 96px;
+    height: 2px;
+    background: var(--line);
+  }
+  .fan-in .stub {
+    position: absolute;
+    top: 4px;
+    width: 2px;
+    height: 20px;
+    background: var(--line);
+  }
+  .fan-in .stub.c1 { left: 187px; }
+  .fan-in .stub.c2 { left: 284px; }
+  .fan-in .stub.c3 { left: 381px; }
+  .chip {
+    position: absolute;
+    right: 4px;
+    top: -4px;
+    font-size: 10px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2px 9px;
+    background: #ffffff;
+    font-family: 'DejaVu Sans Mono', 'FreeMono', monospace;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="row"><div class="node endpoint"><div class="t">Browser Frontend</div><div class="s">Next.js dashboard · scan input · results tabs</div></div></div>
+  <div class="arrow"></div><div class="arrow-head"></div><div class="v-gap"></div>
+  <div class="row"><div class="node dark wide"><div class="t">FastAPI API Gateway</div><div class="s">identifier validation · consent gate · job dispatch</div></div></div>
+  <div class="v-gap" style="height:6px"></div>
+  <div class="fan-out">
+    <div class="root"></div>
+    <div class="rail"></div>
+    <div class="stub c1"></div><div class="stub c2"></div><div class="stub c3"></div>
+    <div class="head c1"></div><div class="head c2"></div><div class="head c3"></div>
+    <div class="chip">Redis + Celery queue</div>
+  </div>
+  <div class="row">
+    <div class="node worker"><div class="t">Email Worker</div><div class="s">Holehe<br>account presence</div></div>
+    <div class="node worker"><div class="t">Username Worker</div><div class="s">Sherlock · WhatsMyName<br>site registry checks</div></div>
+    <div class="node worker"><div class="t">Breach Worker</div><div class="s">XposedOrNot<br>(HIBP optional)</div></div>
+  </div>
+  <div class="fan-in">
+    <div class="stub c1"></div><div class="stub c2"></div><div class="stub c3"></div>
+    <div class="rail"></div>
+  </div>
+  <div class="v-gap" style="height:8px"></div>
+  <div class="row"><div class="node"><div class="t">Result Normalizer</div><div class="s">unified finding schema · source attribution</div></div></div>
+  <div class="arrow"></div><div class="arrow-head"></div><div class="v-gap"></div>
+  <div class="row"><div class="node"><div class="t">Entity Correlator</div><div class="s">cross-platform identity clusters · confidence</div></div></div>
+  <div class="arrow"></div><div class="arrow-head"></div><div class="v-gap"></div>
+  <div class="row"><div class="node"><div class="t">Risk Engine</div><div class="s">heuristic exposure score · severity bands</div></div></div>
+  <div class="arrow"></div><div class="arrow-head"></div><div class="v-gap"></div>
+  <div class="row"><div class="node"><div class="t">Report Generator</div><div class="s">Digital Exposure Report · recommendations</div></div></div>
+  <div class="arrow"></div><div class="arrow-head"></div><div class="v-gap"></div>
+  <div class="row"><div class="node endpoint"><div class="t">Dashboard</div><div class="s">Overview · Accounts · Breaches · Web · Graph · Risk</div></div></div>
+</div>
+</body>
+</html>

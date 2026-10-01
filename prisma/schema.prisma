@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// FootprintX scan records.
+// Privacy-mode scans are NEVER persisted here (in-memory only).
+model ScanRecord {
+  id             String    @id @default(uuid())
+  identifierType String // email | username
+  identifierMask String // masked display form, e.g. j***@example.com
+  identifierHash String // sha256 of normalized identifier (§11)
+  identifierRaw  String?  // stored only when privacy mode is OFF
+  mode           String // quick | deep
+  privacyMode    Boolean   @default(false)
+  retention      String // d30 | until_deleted | after_scan
+  status         String // queued | running | completed | deleted
+  riskScore      Int?
+  severityBand   String?
+  summary        String? // JSON string of summary counts
+  findings       String? // JSON string of the full report payload
+  createdAt      DateTime  @default(now())
+  completedAt    DateTime?
+  expiresAt      DateTime? // d30 retention: createdAt + 30 days
+}

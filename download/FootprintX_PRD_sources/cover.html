@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: 794px 1123px; margin: 0; }
+  :root {
+    /* cascade palette (seed 42) */
+    --c-bg: #f4f5f5;
+    --c-accent: #1f6c92;
+    --c-text: #131515;
+    --c-muted: #747b7e;
+    --c-mid: #32454e;
+    --c-surface: #e8eaeb;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 794px;
+    height: 1123px;
+    background: var(--c-bg);
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  }
+  @media screen {
+    html { height: auto; display: flex; justify-content: center; min-height: 100vh; background: var(--c-bg); }
+    body { transform-origin: top center; scale: min(1, calc(100vw / 794), calc(100vh / 1123)); margin: 0 auto; box-shadow: 0 0 60px rgba(0,0,0,0.12); }
+  }
+  .cover {
+    position: relative;
+    width: 794px;
+    height: 1123px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  /* Layer 1 — background grid (clipped) */
+  .layer-1 {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+    background-image:
+      linear-gradient(to right, rgba(31, 108, 146, 0.05) 0.5px, transparent 0.5px),
+      linear-gradient(to bottom, rgba(31, 108, 146, 0.05) 0.5px, transparent 0.5px);
+    background-size: 50px 50px;
+  }
+  /* Layer 2 — structure: thick left anchor line */
+  .layer-2 { position: absolute; inset: 0; z-index: 2; }
+  .anchor-line {
+    position: absolute;
+    left: 95px;
+    top: 112px;
+    bottom: 112px;
+    width: 8px;
+    background: var(--c-accent);
+  }
+  /* Layer 3 — content */
+  .layer-3 { position: absolute; inset: 0; z-index: 3; }
+  .kicker {
+    position: absolute;
+    left: 190px;
+    top: 166px;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--c-text);
+    opacity: 0.6;
+    font-family: 'DejaVu Sans Mono', 'Liberation Mono', monospace;
+  }
+  .hero {
+    position: absolute;
+    left: 190px;
+    top: 330px;
+    max-width: 540px;
+    font-size: 60pt;
+    line-height: 1.15;
+    font-weight: 900;
+    color: var(--c-text);
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    position: absolute;
+    left: 190px;
+    top: 448px;
+    max-width: 520px;
+    font-size: 18pt;
+    line-height: 1.4;
+    font-weight: 300;
+    color: var(--c-mid);
+  }
+  .summary {
+    position: absolute;
+    left: 190px;
+    top: 562px;
+    max-width: 476px;
+    font-size: 12.5pt;
+    line-height: 1.65;
+    font-weight: 400;
+    color: var(--c-text);
+    opacity: 0.85;
+  }
+  .meta {
+    position: absolute;
+    left: 190px;
+    top: 842px;
+    font-size: 13pt;
+    line-height: 1.75;
+    font-weight: 400;
+    color: var(--c-text);
+  }
+  .meta .label { color: var(--c-muted); }
+  .meta .stack {
+    font-family: 'DejaVu Sans Mono', 'Liberation Mono', monospace;
+    font-size: 10pt;
+    color: var(--c-muted);
+    letter-spacing: 1px;
+  }
+  .footer {
+    position: absolute;
+    left: 190px;
+    bottom: 68px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--c-text);
+    opacity: 0.6;
+    font-family: 'DejaVu Sans Mono', 'Liberation Mono', monospace;
+  }
+</style>
+</head>
+<body>
+  <div class="cover">
+    <div class="layer-1"></div>
+    <div class="layer-2">
+      <div class="anchor-line"></div>
+    </div>
+    <div class="layer-3">
+      <div class="kicker">Product Requirements Document &middot; V 0.1</div>
+      <div class="hero">FOOTPRINTX</div>
+      <div class="subtitle">Digital Footprint Intelligence Platform</div>
+      <div class="summary">
+        A privacy-first, open-source platform that turns scattered OSINT signals &mdash; known
+        breaches, account registrations, and public web references &mdash; into one evidence-backed
+        Digital Exposure Report with confidence scoring, risk analysis, and remediation guidance.
+      </div>
+      <div class="meta">
+        <span class="label">Version</span> &nbsp;0.1 (MVP baseline)<br>
+        <span class="label">Status</span> &nbsp;Open source &middot; defensive security tool<br>
+        <span class="label">Date</span> &nbsp;October 2026
+        <div class="stack" style="margin-top: 14px;">NEXT.JS &middot; FASTAPI &middot; POSTGRESQL &middot; REDIS</div>
+      </div>
+      <div class="footer">Privacy-first &middot; Consent-gated &middot; Self-assessment</div>
+    </div>
+  </div>
+</body>
+</html>
