@@ -45,3 +45,20 @@ Stage Summary:
 - Final PDF: /home/z/my-project/download/FootprintX_PRD.pdf (23 pages, A4, ~440KB)
 - HTML sources delivered: /home/z/my-project/download/FootprintX_PRD_sources/ (cover.html, diagram-architecture.html)
 - Web app verified still healthy (HTTP 200, no errors)
+
+---
+Task ID: 13
+Agent: main (Z.ai)
+Task: Guide user to run FootprintX locally (after zip extraction) + write README.md and CLAUDE.md
+
+Work Log:
+- Verified local-run prerequisites: tested Prisma SQLite relative-path resolution empirically (runtime + CLI resolve against prisma/schema.prisma). Confirmed DATABASE_URL="file:../db/custom.db" works; the shipped absolute path must be replaced locally
+- Read package.json scripts, prisma/schema.prisma, db.ts, next.config.ts, scans API route to document exact commands and API shapes
+- Wrote /home/z/my-project/README.md (overview, simulated-engine warning, tech stack, step-by-step local setup, troubleshooting, scripts, structure, API reference with curl examples, engine/privacy/design explainers, roadmap)
+- Wrote /home/z/my-project/CLAUDE.md (project context, v0.1 feature inventory, architecture map: state machine flow, API routes, scanner module table, data model, 7 hard rules, task→file map, testing checklist, known mocks)
+- Copied README.md + CLAUDE.md to download/ for user retrieval; cleaned up prisma path test script; confirmed app on :3000 still HTTP 200
+
+Stage Summary:
+- User can run locally: npm install → set DATABASE_URL="file:../db/custom.db" in .env → npm run db:push → npm run dev → localhost:3000
+- Docs live at project root (README.md, CLAUDE.md) and in download/
+- Key portability fix documented: shipped .env absolute path is sandbox-specific and must be edited
