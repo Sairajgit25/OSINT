@@ -34,7 +34,7 @@
 | Identity graph | @xyflow/react (React Flow) |
 | Database | SQLite via Prisma ORM |
 | Validation | Zod (schemas) + custom identifier validators |
-| Package manager | npm (or Bun — `bun.lock` included) |
+| Package manager | npm (`bun.lock` is also included for Bun users, but Bun is optional) |
 
 ---
 
@@ -43,7 +43,7 @@
 ### Prerequisites
 
 - **Node.js ≥ 20.9** (LTS 20 or 22 recommended) — check with `node -v`
-- **npm ≥ 10** (ships with Node 20+), or [Bun](https://bun.sh) ≥ 1.1 if you prefer
+- **npm ≥ 10** (ships with Node 20+)
 
 ### Step-by-step
 
@@ -89,8 +89,10 @@ Open **http://localhost:3000** in your browser. You should see the FootprintX ho
 
 ```bash
 npm run build
-npm run start        # uses Bun; or run: node .next/standalone/server.js
+npm run start
 ```
+
+`build` produces a self-contained standalone server under `.next/standalone` (a small Node helper, `scripts/copy-standalone.js`, copies the static assets in — Windows-safe, no `cp` needed). `start` serves it with plain Node; **Bun is not required anymore**.
 
 For day-to-day testing and polishing, `npm run dev` is all you need — it hot-reloads on every save.
 
@@ -101,9 +103,27 @@ For day-to-day testing and polishing, `npm run dev` is all you need — it hot-r
 | `PrismaClientInitializationError` / database not found | Your `.env` still points at the old absolute path — redo Step 3. As a fallback, use a full absolute path to `db/custom.db` on your machine, e.g. `DATABASE_URL="file:/Users/me/projects/footprintx/db/custom.db"` |
 | `Error: P1003: table does not exist` | Run `npm run db:push` (Step 4) |
 | Port 3000 already in use | `npx next dev -p 3001` and open http://localhost:3001 |
-| Windows `cmd.exe` chokes on the `dev` script's `tee` | Use PowerShell or Git Bash (both handle it), or run `npx next dev -p 3000` directly |
+| `'tee' is not recognized` on Windows | Only happens with an **older copy** of this project whose npm scripts used Unix commands. Run `npx next dev -p 3000` to start instantly, then apply the one-time fix below |
+| `npm run lint` fails on `require()` in `scripts/` | Older copy again — the current ESLint config ignores `scripts/**` (plain Node utilities, not app code) |
 | Node version errors during `npm install` | Upgrade to Node 20+ (Tailwind 4 and Next 16 both require it) |
 | Want a clean database | Stop the server, delete `db/custom.db`, run `npm run db:push` |
+
+> **One-time fix for older copies (Windows)** — early downloads shipped Unix-only npm scripts (`tee`, `cp`, `NODE_ENV=...`), which break on `cmd.exe`. The current copy is Windows-safe out of the box. If yours is older, replace the `"scripts"` block in `package.json` with:
+>
+> ```json
+> "scripts": {
+>   "dev": "next dev -p 3000",
+>   "build": "next build && node scripts/copy-standalone.js",
+>   "start": "node .next/standalone/server.js",
+>   "lint": "eslint .",
+>   "db:push": "prisma db push --accept-data-loss",
+>   "db:generate": "prisma generate",
+>   "db:migrate": "prisma migrate dev",
+>   "db:reset": "prisma migrate reset"
+> }
+> ```
+>
+> …and create `scripts/copy-standalone.js` ([get it here, 15 lines](scripts/copy-standalone.js)) — it replaces the Unix `cp -r` inside `build`. Everything else in the project is already cross-platform.
 
 ---
 
@@ -111,9 +131,9 @@ For day-to-day testing and polishing, `npm run dev` is all you need — it hot-r
 
 | Script | What it does |
 |---|---|
-| `npm run dev` | Start the dev server on port 3000 (logs to `dev.log`) |
-| `npm run build` | Production build (standalone output) |
-| `npm run start` | Serve the production build (via Bun) |
+| `npm run dev` | Start the dev server on port 3000 |
+| `npm run build` | Production build (standalone output + cross-platform asset copy) |
+| `npm run start` | Serve the production build (plain Node) |
 | `npm run lint` | ESLint across the project |
 | `npm run db:push` | Sync `prisma/schema.prisma` to the SQLite file |
 | `npm run db:generate` | Regenerate the Prisma client |

@@ -30,9 +30,11 @@ Everything below is **built, linted, and browser-tested** (ESLint clean, API cur
 npm run dev        # dev server on :3000 (hot reload) — primary workflow
 npm run lint       # ESLint
 npm run db:push    # sync prisma/schema.prisma → db/custom.db (idempotent)
-npm run build      # production build (standalone output)
-npm run start      # serve production build (uses Bun; node .next/standalone/server.js also works)
+npm run build      # production build (standalone output + scripts/copy-standalone.js asset copy)
+npm run start      # serve production build with plain node (.next/standalone/server.js)
 ```
+
+npm scripts are **cross-platform (Windows cmd.exe-safe)** — no Unix-only `tee`, `cp`, or inline `NODE_ENV=...` anywhere. `scripts/` holds plain Node utility scripts (build helper, docs tooling) and is excluded from ESLint via `ignores` in `eslint.config.mjs`; do not move app code there.
 
 `.env` must contain `DATABASE_URL="file:../db/custom.db"` — Prisma resolves this **relative to `prisma/schema.prisma`**, so it points to `db/custom.db` at the project root. Do not commit a local absolute path.
 

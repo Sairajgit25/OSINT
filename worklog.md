@@ -62,3 +62,22 @@ Stage Summary:
 - User can run locally: npm install → set DATABASE_URL="file:../db/custom.db" in .env → npm run db:push → npm run dev → localhost:3000
 - Docs live at project root (README.md, CLAUDE.md) and in download/
 - Key portability fix documented: shipped .env absolute path is sandbox-specific and must be edited
+
+---
+Task ID: 14
+Agent: main (Z.ai)
+Task: Resolve Windows cmd.exe 'tee' error in npm run dev (user running project locally on Windows)
+
+Work Log:
+- Diagnosed: 'tee' is a Unix utility absent from Windows cmd.exe; scaffold scripts (dev/build/start) were written for a Linux shell and would also fail later at build (`cp -r`) and start (`NODE_ENV=...` + bun)
+- Confirmed preview server on :3000 runs via `bun run dev` (dev mode, no standalone build present); running process unaffected by package.json edits
+- Made all npm scripts cross-platform with zero new dependencies: dev → `next dev -p 3000` (dropped tee/dev.log), build → `next build && node scripts/copy-standalone.js` (fs.cpSync replaces cp -r), start → `node .next/standalone/server.js` (dropped NODE_ENV prefix — Next standalone server.js sets it internally; dropped bun requirement)
+- Created scripts/copy-standalone.js (plain Node, syntax-checked, cpSync verified)
+- Fixed pre-existing lint failures (3 errors): added scripts/** to eslint.config.mjs ignores (scripts/pdf-build/shot_diagram.js + new helper are plain Node utilities, not app code); npm run lint now exits 0
+- Updated README.md (prerequisites, production section, scripts table, troubleshooting incl. 'tee' row + one-time fix block for older copies) and CLAUDE.md (Commands section + cross-platform note)
+- Copied updated docs to download/ plus download/scripts-fix/ (package.json + copy-standalone.js) for the user's local one-time patch; app verified still HTTP 200
+
+Stage Summary:
+- Root cause: Unix-only npm scripts vs Windows cmd.exe
+- Canonical project now Windows-safe out of the box; user unblocked via npx next dev -p 3000 (instant) or scripts-block replacement (permanent)
+- Note: dev.log/server.log no longer written by scripts; output goes straight to the terminal (with native colors)
